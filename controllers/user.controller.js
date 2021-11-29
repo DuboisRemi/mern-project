@@ -78,11 +78,13 @@ module.exports.follow = async (req, res) => {
 module.exports.unfollow = async (req, res) => {
   const id = req.params.id;
   if (!ObjectID.isValid(id)) return res.status(400).send("ID unknow: " + id);
+  if (!ObjectID.isValid(req.body.idToUnfollow))
+    return res.status(400).send("ID unknow: " + req.body.idToUnfollow);
   try {
     // add to the followers list
     await UserModel.findByIdAndUpdate(
       id,
-      { following: req.body.idToFollow },
+      { $pull: { following: req.body.idToUnfollow } },
       { new: true },
       (err, docs) => {
         if (err) return res.status(400).json(err);
@@ -90,14 +92,15 @@ module.exports.unfollow = async (req, res) => {
     ).clone();
     //add to following list
     await UserModel.findByIdAndUpdate(
-      req.body.idToFollow,
-      { followers: id },
-      { new: true, upsert: true },
+      req.body.idToUnfollow,
+      { $pull: { followers: id } },
+      { new: true },
       (err, docs) => {
         if (!err) return res.status(201).json(docs);
         else return res.status(400).json(err);
       }
     ).clone();
+    return res.status(201).json("Successfully followed");
   } catch (err) {
     return res.status(500).send({ message: err });
   }
