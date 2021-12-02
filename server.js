@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
-require("dotenv").config({ path: "./config/.env" });
+require("dotenv-flow").config({ path: "./config/" });
 require("./config/db");
 const app = express();
 const userRoutes = require("./routes/user.routes");
@@ -23,3 +23,6 @@ app.use("/api/post", postRoutes);
 app.listen(process.env.PORT, () => {
   console.log(`Listening on port ${process.env.PORT}`);
 });
+
+//required to run tests
+module.exports = app;

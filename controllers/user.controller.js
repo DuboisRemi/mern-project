@@ -20,12 +20,15 @@ module.exports.userInfo = async (req, res) => {
 
 module.exports.updateUser = async (req, res) => {
   const id = req.params.id;
+  const updatedField = req.body;
   if (!ObjectID.isValid(id)) return res.status(400).send("ID unknow: " + id);
   try {
-    let user = await UserModel.findOneAndUpdate(id, req.body, {
-      new: true,
-      upsert: true,
-    }).select("-password");
+    let user = await UserModel.findById(id);
+    if ("password" in updatedField) user.password = updatedField.password;
+    if ("email" in updatedField) user.email = updatedField.email;
+    user = await user.save();
+    // remove the password to don't send it
+    user.password = undefined;
     return res.status(200).send(user);
   } catch (err) {
     console.log(err);
@@ -65,7 +68,7 @@ module.exports.follow = async (req, res) => {
       { $addToSet: { followers: req.params.id } },
       { new: true },
       (err, docs) => {
-        if (err) return res.status(400).json(docs);
+        if (err) return res.status(400).send({ message: err });
       }
     ).clone();
     return res.status(201).json("Successfully followed");
