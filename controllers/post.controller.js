@@ -102,8 +102,8 @@ module.exports.unlikePost = async (req, res) => {
         console.log("Error when unlike post : " + err);
         res.status(500);
       }
-    });
-    postLikersLikeRemoved = array.filter(function (value, index, arr) {
+    }).clone();
+    postLikersLikeRemoved = post.likers.filter(function (value, index, arr) {
       return value != req.body.id;
     });
     post.likers = postLikersLikeRemoved;
@@ -114,12 +114,13 @@ module.exports.unlikePost = async (req, res) => {
           console.log("Error when unlike post : " + err);
           res.status(500);
         }
-      });
-      UserLikeRemoved = array.filter(function (value, index, arr) {
+      }).clone();
+      UserLikeRemoved = user.likes.filter(function (value, index, arr) {
         return value != req.params.id;
       });
       user.likes = UserLikeRemoved;
       await user.save();
+      res.status(201).json(post);
     } catch (err) {
       console.log("Error when unliking post : " + err);
       res.status(500);

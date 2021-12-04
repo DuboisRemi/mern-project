@@ -47,7 +47,7 @@ describe("Test post Workflow", () => {
       });
   });
 
-  it("The user like this own post", (done) => {
+  it("The user like this own post then unlike it ", (done) => {
     chai
       .request(app)
       .patch(`/api/post/like/${postId}`)
@@ -59,7 +59,19 @@ describe("Test post Workflow", () => {
         expect(res.body._id).to.be.equal(postId);
         expect(res.body.likers).to.include(userId);
         expect(res.status).to.be.equal(201);
-        done();
+        chai
+          .request(app)
+          .patch(`/api/post/unlike/${postId}`)
+          .send({
+            id: userId,
+          })
+          .set("Cookie", cookie)
+          .end((err, res) => {
+            expect(res.status).to.be.equal(201);
+            expect(res.body.likers).to.not.include(userId);
+            expect(res.body._id).to.be.equal(postId);
+            done();
+          });
       });
   });
 });
