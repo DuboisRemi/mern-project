@@ -1,4 +1,5 @@
 const PostModel = require("../models/post.model");
+const CommentModel = require("../models/comment.model");
 const UserModel = require("../models/user.model");
 const ObjectID = require("mongoose").Types.ObjectId;
 
@@ -10,39 +11,46 @@ module.exports.readPost = (req, res) => {
 };
 
 module.exports.createPost = async (req, res) => {
-  const newPost = new PostModel({
-    posterId: req.body.posterId,
-    message: req.body.message,
-    video: req.body.video,
-    likers: [],
-    comments: [],
-  });
-
+  const { posterId, message, video } = req.body;
   try {
-    const post = await newPost.save();
-    return res.status(200).json(post);
+    const newPost = await PostModel.create({
+      posterId: posterId,
+      message: message,
+      video: video,
+    });
+    return res.status(201).json(newPost);
   } catch (err) {
+    console.log(err);
     return res.status(400).send(err);
   }
 };
 
 module.exports.updatePost = (req, res) => {
   if (!ObjectID.isValid(req.params.id)) {
-    return res.status(404).send("Invalid Id: " + req.params.id);
+    return res.status(400).send("Invalid Id: " + req.params.id);
   }
-
+  console.log(req.params.id);
   const updatedRecord = {
     message: req.body.message,
   };
-  PostModel.findByIdAndUpdate(
-    req.params.id,
-    { $set: updatedRecord },
-    { new: true },
-    (err, docs) => {
-      if (!err) res.send(docs);
-      else console.log("Update error : " + err);
-    }
-  );
+  try {
+    PostModel.findByIdAndUpdate(
+      req.params.id,
+      { $set: updatedRecord },
+      { new: true },
+      (err, docs) => {
+        if (!err) {
+          res.json(docs);
+          res.status(200);
+          return res;
+        } else console.log("Update error : " + err);
+      }
+    );
+  } catch (err) {
+    console.log("Error while updating post: " + err);
+    res.status(500).json({ error: err });
+    return res;
+  }
 };
 
 module.exports.deletePost = async (req, res) => {
@@ -51,8 +59,10 @@ module.exports.deletePost = async (req, res) => {
   }
 
   PostModel.findByIdAndDelete(req.params.id, (err, docs) => {
-    if (!err) res.send(docs);
-    else console.log("Delete error : " + err);
+    if (!err) {
+      res.status(200);
+      res.send({ message: "Post deleted successfully" });
+    } else console.log("Delete error : " + err);
   });
 };
 
@@ -66,8 +76,8 @@ module.exports.likePost = async (req, res) => {
   try {
     let post = await PostModel.findById(req.params.id, (err, docs) => {
       if (err) {
-        console.log("Error when like post : " + err);
-        res.send.status(500);
+        console.log("Error can't post : " + req.params.id + "\n" + err);
+        res.send.status(404);
       }
     }).clone(); //cloning to avoid mongo error saying this request has already been excecuted
     post.likers.push(req.body.id);
@@ -75,13 +85,16 @@ module.exports.likePost = async (req, res) => {
     try {
       let user = await UserModel.findById(req.body.id, (err, docs) => {
         if (err) {
-          console.log("Error can't find the user : " + err);
-          res.send.status(500);
+          console.log(
+            "Error can't find the user : " + req.body.id + "\n" + err
+          );
+          res.send.status(404);
         }
       }).clone(); //cloning to avoid mongo error saying this request has already been excecuted
       user.likes.push(req.params.id);
       await user.save();
-      res.status(201).json(post);
+      res.status(201);
+      res.json(post);
     } catch (err) {
       console.log("Error while add post in liked posts of the user : " + err);
       res.status(500);
@@ -128,5 +141,44 @@ module.exports.unlikePost = async (req, res) => {
   } catch (err) {
     console.log("Error when unliking post : " + err);
     res.status(500);
+  }
+};
+
+module.exports.commentPost = async (req, res) => {
+  if (!ObjectID.isValid(req.params.id)) {
+    return res.status(400).send("Invalid post Id: " + req.params.id);
+  }
+  if (!ObjectID.isValid(req.body.commenterId)) {
+    return res.status(400).send("Invalid user Id: " + req.body.commenterId);
+  }
+  try {
+    let post = await PostModel.findById(req.params.id, (err, docs) => {
+      if (err) {
+        console.log("Error can't find post : " + err);
+        res.status(404).send(err);
+        return res;
+      }
+    }).clone(); //cloning to avoid mongo error saying this request has already been excecuted
+    const { commenterId, commenterPseudo, text } = req.body;
+    const comment = new CommentModel(
+      {
+        commenterId: commenterId,
+        commenterPseudo: commenterPseudo,
+        text: text,
+      },
+      (err) => {
+        console.log("Error while creating comment : " + err);
+        return res.status(500);
+      }
+    );
+    post.comments.push(comment);
+    await post.save();
+    res.status(200);
+    res.send(post);
+    return res;
+  } catch (err) {
+    console.log("Error when commenting post : " + err);
+    res.status(500);
+    return res;
   }
 };

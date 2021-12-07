@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const CommentSchema = require("./comment.model").schema;
 
 const PostSchema = new mongoose.Schema(
   {
@@ -20,17 +21,12 @@ const PostSchema = new mongoose.Schema(
     likers: {
       type: [String],
       required: true,
+      default: [],
     },
     comments: {
-      type: [
-        {
-          commenterId: String,
-          commenterPseudo: String,
-          text: String,
-          timestamp: Number,
-        },
-      ],
+      type: [CommentSchema],
       required: true,
+      default: [],
     },
   },
   {

@@ -20,9 +20,16 @@ app.get("/jwtid", requireAuth, (req, res) => {
 app.use("/api/user", userRoutes);
 app.use("/api/post", postRoutes);
 
-app.listen(process.env.PORT, () => {
+let port = process.env.PORT || 5000;
+let server = app.listen(port, () => {
   console.log(`Listening on port ${process.env.PORT}`);
 });
 
 //required to run tests
-module.exports = app;
+
+function stop() {
+  server.close();
+}
+
+module.exports = server;
+module.exports.stop = stop;

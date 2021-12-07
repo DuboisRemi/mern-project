@@ -1,9 +1,10 @@
 process.env.NODE_ENV = "test";
 
-const app = require("../server.js");
+const app = require("../server");
 const chai = require("chai");
 const expect = chai.expect;
 const chaiHttp = require("chai-http");
+const ObjectID = require("mongoose").Types.ObjectId;
 chai.use(chaiHttp);
 
 //Create randomPseudos for the tests
@@ -20,15 +21,23 @@ describe("Test post Workflow", () => {
     password: "pass123",
   };
 
-  it("Should register a user and create a post then", (done) => {
+  after(async () => {
+    console.log("Stoping the server.........");
+    app.stop();
+  });
+  it("Should register a user,  create a post and update id", (done) => {
     chai
       .request(app)
       .post("/api/user/register")
       .send(user)
       .end((err, res) => {
+        if (err) {
+          console.log(err);
+          done();
+        }
         expect(err).to.be.null;
         expect(res.status).to.be.equal(201);
-        expect(res.body).to.be.not.null;
+        expect(res.body.user).to.be.not.undefined;
         userId = res.body.user;
         cookie = res.header["set-cookie"][0];
         chai
@@ -41,13 +50,32 @@ describe("Test post Workflow", () => {
           .set("Cookie", cookie)
           .end((err, res) => {
             postId = res.body._id;
-            expect(res.status).to.be.equal(200);
-            done();
+            if (err) {
+              console.log(err);
+              done();
+            }
+            expect(res.status).to.be.equal(201);
+            expect(res.body.message).to.be.equal("This is a test post");
+            expect(ObjectID.isValid(postId)).to.be.true;
+            chai
+              .request(app)
+              .patch(`/api/post/${postId}`)
+              .send({ message: "Updated post" })
+              .set("Cookie", cookie)
+              .end((err, res) => {
+                if (err) {
+                  console.log(err);
+                  done();
+                }
+                expect(res.status).to.be.equal(200);
+                expect(res.body._id).to.be.equal(postId);
+                expect(res.body.message).to.be.equal("Updated post");
+                done();
+              });
           });
       });
   });
-
-  it("The user like this own post then unlike it ", (done) => {
+  it("The user likes this own post then unlikes it ", (done) => {
     chai
       .request(app)
       .patch(`/api/post/like/${postId}`)
@@ -56,9 +84,9 @@ describe("Test post Workflow", () => {
       })
       .set("Cookie", cookie)
       .end((err, res) => {
+        expect(res.status).to.be.equal(201);
         expect(res.body._id).to.be.equal(postId);
         expect(res.body.likers).to.include(userId);
-        expect(res.status).to.be.equal(201);
         chai
           .request(app)
           .patch(`/api/post/unlike/${postId}`)
@@ -72,6 +100,42 @@ describe("Test post Workflow", () => {
             expect(res.body._id).to.be.equal(postId);
             done();
           });
+      });
+  });
+
+  it("The user comments this own post", (done) => {
+    chai
+      .request(app)
+      .patch(`/api/post/comment/${postId}`)
+      .send({
+        commenterId: userId,
+        commenterPseudo: randomPseudo,
+        text: "I comment my post",
+      })
+      .set("Cookie", cookie)
+      .end((err, res) => {
+        if (err) {
+          console.log(err);
+          done();
+        }
+        expect(res.status).to.be.equal(200);
+        expect(res.body.comments.text).to.be.equal("I comment my post");
+        done();
+      });
+  });
+
+  it("Should delete the post created", (done) => {
+    chai
+      .request(app)
+      .delete(`/api/post/${postId}`)
+      .set("Cookie", cookie)
+      .end((err, res) => {
+        if (err) {
+          console.log(err);
+          done();
+        }
+        expect(res.status).to.be.equal(200);
+        done();
       });
   });
 });

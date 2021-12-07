@@ -4,14 +4,12 @@ const app = require("../server.js");
 const chai = require("chai");
 const expect = chai.expect;
 const chaiHttp = require("chai-http");
+
 chai.use(chaiHttp);
 
 //Create randomPseudos for the tests
 var randomPseudo = (Math.random() + 1).toString(36).substring(7);
 var randomPseudo2 = (Math.random() + 1).toString(36).substring(7);
-
-console.log(randomPseudo);
-console.log(randomPseudo2);
 
 describe("User workflow test", () => {
   //we keep the user ids during the whole workflow
@@ -24,6 +22,11 @@ describe("User workflow test", () => {
     email: randomPseudo + "@email.com",
     password: "pass123",
   };
+
+  after(async () => {
+    console.log("Stoping the server.........");
+    app.stop();
+  });
 
   it("Should register a user", (done) => {
     chai
