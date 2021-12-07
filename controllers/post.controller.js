@@ -2,21 +2,52 @@ const PostModel = require("../models/post.model");
 const CommentModel = require("../models/comment.model");
 const UserModel = require("../models/user.model");
 const ObjectID = require("mongoose").Types.ObjectId;
+const { uploadErrors } = require("../utils/errors.utils");
 
 module.exports.readPost = (req, res) => {
   PostModel.find((err, docs) => {
-    if (!err) res.send(docs);
-    else console.log("Error to get data: " + err);
+    if (!err) {
+      res.status(200);
+      res.send(docs);
+      return res;
+    } else console.log("Error to get data: " + err);
+  }).sort({
+    createdAt: -1,
   });
 };
 
 module.exports.createPost = async (req, res) => {
+  let fileName;
+
+  if (req.file !== undefined) {
+    try {
+      if (
+        req.file.detectedMineType != "image/jpg" &&
+        req.file.detectedMineType != "image/png" &&
+        req.file.detectedMineType != "image/jpeg"
+      ) {
+        throw Error("Invalid file");
+      }
+      if (req.file.size > 500000) throw Error("max size");
+    } catch (err) {
+      const errors = uploadErrors(err);
+      return res.status(400).json({ errors });
+    }
+    fileName = req.body.posterId + Date.now() + ".jpg";
+  }
+
   const { posterId, message, video } = req.body;
+
+  if (!ObjectID.isValid(posterId)) {
+    return res.status(400).send("Invalid Id: " + posterId);
+  }
+
   try {
     const newPost = await PostModel.create({
       posterId: posterId,
       message: message,
       video: video,
+      picture: fileName !== undefined ? "./uploads/posts/" + fileName : "",
     });
     return res.status(201).json(newPost);
   } catch (err) {

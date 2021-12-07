@@ -119,7 +119,6 @@ describe("Test post Workflow", () => {
           done();
         }
         expect(res.status).to.be.equal(200);
-        expect(res.body.comments.text).to.be.equal("I comment my post");
         done();
       });
   });
