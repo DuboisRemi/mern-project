@@ -17,7 +17,7 @@ const SignIn = () => {
     const loginError = document.querySelector(".login.error");
     axios({
       method: "post",
-      url: `${process.env.REACT_APP_API_URL}api/user/register`,
+      url: `${process.env.REACT_APP_API_URL}api/user/login`,
       data: {
         email: email,
         password: password,
