@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import React from "react";
 import Home from "../../pages/Home.jsx";
-import Profil from "../../pages/Profil.jsx";
+import Profile from "../../pages/Profile.jsx";
 import Trending from "../../pages/Trending";
 
 const index = () => {
@@ -9,7 +9,7 @@ const index = () => {
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/profil" element={<Profil />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="/trending" element={<Trending />} />
         <Route element={<Home />} />
       </Routes>

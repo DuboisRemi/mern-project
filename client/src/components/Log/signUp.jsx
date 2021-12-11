@@ -36,7 +36,7 @@ const SignUp = () => {
           pseudoError.innerHTML = res.data.errors.pseudo;
           passwordError.innerHTML = res.data.errors.password;
         } else {
-          window.location = "/";
+          window.location = `/user/${res.data.id}`;
         }
       });
     }
