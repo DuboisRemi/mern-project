@@ -7,12 +7,28 @@ import "@fontsource/open-sans/300.css";
 import "@fontsource/open-sans/400.css";
 import "@fontsource/open-sans/500.css";
 import "@fontsource/open-sans/700.css";
+import { Provider } from "react-redux";
+import { applyMiddleware, createStore } from "redux";
+import rootReducer from "./reducers";
+//devTools
+import { composeWithDevTools } from "redux-devtools-extension";
+import thunk from "redux-thunk";
+import { logger } from "redux-logger/src";
+import { getUsers } from "./actions/users.action";
+
+const store = createStore(
+  rootReducer,
+  composeWithDevTools(applyMiddleware(thunk, logger))
+);
+store.dispatch(getUsers());
 
 ReactDOM.render(
   <ThemeProvider theme={theme}>
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
+    <Provider store={store}>
+      <React.StrictMode>
+        <App />
+      </React.StrictMode>
+    </Provider>
   </ThemeProvider>,
   document.getElementById("root")
 );
