@@ -9,15 +9,34 @@ import { List, ListItem } from "@mui/material";
 const Thread = () => {
   const [loadPosts, setLoadPosts] = useState(true);
   const [loading, setLoading] = useState(true);
+  const [reload, setReload] = useState(false);
   const [count, setCount] = useState(5);
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.postsReducer);
+  const loadMore = () => {
+    if (
+      window.innerHeight + document.documentElement.scrollTop + 1 >
+      document.scrollingElement.scrollHeight
+    ) {
+      setLoadPosts(true);
+    }
+  };
+
+  useEffect(() => {
+    if (reload) {
+      dispatch(getPosts(count - 5));
+      setReload(false);
+    }
+  }, [reload]);
+
   useEffect(() => {
     if (loadPosts) {
-      dispatch(getPosts());
+      dispatch(getPosts(count));
       setLoadPosts(false);
       setCount(count + 5);
     }
+    window.addEventListener("scroll", loadMore);
+    return () => window.removeEventListener("scroll", loadMore);
   }, [loadPosts, dispatch, count]);
 
   useEffect(() => {
@@ -34,7 +53,7 @@ const Thread = () => {
               divider={true}
               sx={{ justifyContent: "center" }}
             >
-              <Card post={post} />
+              <Card post={post} setReload={setReload} />
             </ListItem>
           );
         })}

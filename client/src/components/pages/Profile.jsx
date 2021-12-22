@@ -1,46 +1,44 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Loading from "../Loading";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import UpdateProfile from "../profile/UpdateProfile";
 import { isEmpty } from "../../utils";
 import { Button, Grid } from "@mui/material";
+import { logout } from "../../actions/user.actions";
+import UserContext from "../../AppContext";
+import cookie from "js-cookie";
+import Container from "@mui/material/Container";
 
 const Profile = () => {
+  const { uid, defineUid, loading } = useContext(UserContext);
   const userData = useSelector((state) => state.userReducer);
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    if (!isEmpty(userData)) setLoading(false);
-  });
+  const dispatch = useDispatch();
 
-  const logout = () => {
-    axios
-      .post(`${process.env.REACT_APP_API_URL}api/user/logout`, {
-        withCredentials: true,
-      })
-      .then((res) => {
-        window.location = "/auth";
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const handleLogout = () => {
+    defineUid("default");
+    dispatch(logout());
+    window.location = "/auth";
   };
   if (loading) return <Loading />;
-  if (!loading && isEmpty(userData)) {
-    window.location = "/auth";
+  if (!loading && uid === "default") {
+    //window.location = "/auth";
     return <Loading />;
   }
   return (
-    <Grid container direction={"column"} spacing={2}>
-      <Grid item>
-        <UpdateProfile />
-      </Grid>
-      <Grid item marginTop={2} marginRight={5} textAlign={"right"}>
-        <Button variant={"contained"} onClick={logout}>
-          Se déconnecter
-        </Button>
-      </Grid>
-    </Grid>
+    <Container>
+      <UpdateProfile />
+      <Button
+        variant={"contained"}
+        onClick={handleLogout}
+        sx={{
+          position: "relative",
+          left: "75%",
+        }}
+      >
+        Se déconnecter
+      </Button>
+    </Container>
   );
 };
 

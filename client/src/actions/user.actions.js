@@ -1,4 +1,5 @@
 import axios from "axios";
+import cookie from "js-cookie";
 
 export const GET_USER = "GET_USER";
 
@@ -9,6 +10,8 @@ export const UPDATE_BIO = "UPDATE_BIO";
 export const FOLLOW_USER = "FOLLOW_USER";
 
 export const UNFOLLOW_USER = "UNFOLLOW_USER";
+
+export const LOGOUT = "LOGOUT";
 
 export const getUser = (uid) => {
   return (dispatch) => {
@@ -86,5 +89,29 @@ export const unfollowUser = (followerId, idToUnfollow) => {
       .catch((err) => {
         console.log(err);
       });
+  };
+};
+const removeCookie = (key) => {
+  if (window != "undefined") {
+    console.log("removing cookies...");
+    try {
+      cookie.remove(key, { expires: 1 });
+    } catch (err) {
+      console.log(err);
+    }
+  }
+};
+
+export const logout = () => {
+  return (dispatch) => {
+    axios
+      .post(`${process.env.REACT_APP_API_URL}api/user/logout`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        removeCookie("jwt");
+        dispatch({ type: LOGOUT, payload: null });
+      })
+      .catch((err) => {});
   };
 };

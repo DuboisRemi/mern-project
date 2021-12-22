@@ -4,7 +4,10 @@ const jwt = require("jsonwebtoken");
 const { signUpErrors, signInErrors } = require("../utils/errors.utils");
 const User = mongoose.model("user");
 const { setPassword } = require("../utils/password.utils");
+const bycrypt = require("bcrypt");
+
 const maxAge = 3 * 24 * 60 * 60 * 1000;
+
 const createToken = (id) => {
   return jwt.sign({ id }, process.env.TOKEN_SECRET, {
     expiresIn: maxAge,
@@ -57,30 +60,60 @@ module.exports.signUp = async (req, res) => {
   }
 };
 
-module.exports.signIn = async (req, res) => {
-  console.log(req.body);
-
-  const { email, password } = req.body;
-  if (!email) {
+module.exports.login = async (req, res) => {
+  if (!req.body.email) {
     return res.status(200).json({
       errors: {
-        email: "email required",
+        email: "veuillez entrer un email",
       },
     });
-  }
-  if (!password) {
+  } else if (!req.body.password) {
     return res.status(200).json({
       errors: {
-        password: "password required",
+        password: "veuillez entrer un mot de passe",
       },
     });
   }
   try {
-    const user = await UserModel.login(email, password);
-    return res.status(200).send({ user: user._id });
+    const user = await UserModel.findOne({ email: req.body.email });
+    if (user) {
+      const isPasswordOk = await bycrypt.compare(
+        req.body.password,
+        user.password
+      );
+      if (isPasswordOk) {
+        const jwt = createToken(user._id);
+        return res.status(200).cookie("jwt", jwt, { maxAge }).json(user);
+      }
+    }
+    return res.status(200).json({
+      errors: {
+        password: "Combinaison email/mot de passe invalide",
+      },
+    });
   } catch (err) {
-    console.log(err);
-    const errors = signInErrors(err);
-    return res.status(200).json({ errors });
+    return res.status(200).json({
+      errors: {
+        password: "Combinaison email/mot de passe invalide",
+      },
+    });
   }
+};
+
+module.exports.logout = (req, res) => {
+  res.send("successfully disconnected");
+};
+
+module.exports.currentUser = async (req, res) => {
+  const token = req.cookies.jwt;
+  if (token) {
+    jwt.verify(token, process.env.TOKEN_SECRET, async (err, decodedToken) => {
+      if (err) {
+        return res.cookie("jwt", "", { maxAge: 1 }).sendStatus(403);
+      } else {
+        const user = await UserModel.findById(decodedToken.id);
+        return res.status(200).json(user._id);
+      }
+    });
+  } else return res.sendStatus(403);
 };

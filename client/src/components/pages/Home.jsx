@@ -8,33 +8,33 @@ import FollowSuggestions from "../profile/FollowSuggestions";
 import Grid from "@mui/material/Grid";
 
 const Home = () => {
-  const { uId, loading } = useContext(UserContext);
+  const { uid, loading } = useContext(UserContext);
   const userData = useSelector((state) => state.userReducer);
   if (loading) {
     return <Loading />;
-  }
-  return (
-    <Grid container direction={"row"}>
-      <Grid item xs={4}>
-        {uId === "default"
-          ? "Vous n'êtes pas connecté"
-          : "Hello " + userData.pseudo}
-      </Grid>
-      <Grid item xs={4}>
-        <Grid container direction={"column"} textAlign={"center"}>
-          <Grid item>
-            <PostForm />
-          </Grid>
-          <Grid item>
-            <Thread />
+  } else if (uid === "default") {
+    window.location = "/auth";
+  } else
+    return (
+      <Grid container direction={"row"}>
+        <Grid item xs={4}>
+          {"Hello " + userData.pseudo}
+        </Grid>
+        <Grid item xs={4}>
+          <Grid container direction={"column"} textAlign={"center"}>
+            <Grid item>
+              <PostForm />
+            </Grid>
+            <Grid item>
+              <Thread />
+            </Grid>
           </Grid>
         </Grid>
+        <Grid item xs={4}>
+          <FollowSuggestions />
+        </Grid>
       </Grid>
-      <Grid item xs={4}>
-        <FollowSuggestions />
-      </Grid>
-    </Grid>
-  );
+    );
 };
 
 export default Home;

@@ -1,9 +1,5 @@
 import { createContext } from "react";
 
-const UserContext = createContext({
-  uId: "default",
-  loading: true,
-  setUid: () => {},
-});
+const UserContext = createContext();
 
 export default UserContext;

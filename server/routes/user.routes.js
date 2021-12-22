@@ -7,23 +7,14 @@ const passport = require("passport");
 
 //auth
 
-router.get("/currentUser", (req, res) => {
-  if (req.user) res.status(200).json(req.user._id);
-  else {
-    res.sendStatus(403);
-  }
-});
+router.get("/currentUser", authController.currentUser);
 
 router.post("/register", (req, res) => {
   authController.signUp(req, res);
 });
-router.post("/login", passport.authenticate("local"), (req, res) => {
-  res.json(req.user);
-});
-router.post("/logout", (req, res) => {
-  req.logout();
-  res.status(200).send("Successfully logout");
-});
+router.post("/login", authController.login);
+
+router.post("/logout", authController.logout);
 
 //user db
 router.get("/", userController.getAllUsers);

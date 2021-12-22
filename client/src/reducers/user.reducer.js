@@ -1,6 +1,7 @@
 import {
   FOLLOW_USER,
   GET_USER,
+  LOGOUT,
   UNFOLLOW_USER,
   UPDATE_BIO,
   UPLOAD_PICTURE,
@@ -32,6 +33,8 @@ export default function userReducer(state = initialState, action) {
         ...state,
         following: state.following.filter((id) => id !== action.payload),
       };
+    case LOGOUT:
+      return {};
     default:
       return state;
   }

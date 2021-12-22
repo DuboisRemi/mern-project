@@ -1,4 +1,5 @@
 const UserModel = require("../models/user.model");
+const bycrypt = require("bcrypt");
 const ObjectID = require("mongoose").Types.ObjectId;
 
 module.exports.getAllUsers = async (req, res) => {
@@ -107,3 +108,4 @@ module.exports.unfollow = async (req, res) => {
     return res.status(500).send({ message: err });
   }
 };
+

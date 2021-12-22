@@ -50,9 +50,6 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-userSchema.methods.validPassword = async function (password) {
-  return await bcrypt.compare(password, this.password);
-};
 
 userSchema.methods.generateJWT = function () {
   const today = new Date();

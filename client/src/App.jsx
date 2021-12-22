@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import CssBaseline from "@mui/material/CssBaseline";
 import Routes from "./components/Routes";
 import NavBar from "./components/NavBar";
@@ -6,17 +6,16 @@ import UserContext from "./AppContext";
 import { useDispatch } from "react-redux";
 import { getUser } from "./actions/user.actions";
 import axios from "axios";
+import Context from "react-redux/lib/components/Context";
 
 require("dotenv").config();
 
 const App = () => {
   const dispatch = useDispatch();
-  const [uId, setUId] = useState("default");
+  const [uid, setUid] = useState("default");
   const [loading, setLoading] = useState(true);
-  const value = {
-    uId: uId,
-    loading: loading,
-    setUId: setUId,
+  const defineUid = (id) => {
+    setUid(id);
   };
   useEffect(() => {
     async function fetchUser() {
@@ -25,23 +24,24 @@ const App = () => {
           withCredentials: true,
         })
         .then((res) => {
-          if (res.data) setUId(res.data);
+          console.log(res.data);
+          if (res.data) setUid(res.data);
         })
         .catch((err) => {
           console.log(err);
         });
-    }
-    if (loading && uId === "default") {
-      fetchUser();
       setLoading(false);
     }
-    if (uId !== "default") {
-      dispatch(getUser(uId));
+    if (loading && uid === "default") {
+      fetchUser();
     }
-  }, [uId, loading, dispatch]);
+    if (uid !== "default") {
+      dispatch(getUser(uid));
+    }
+  }, [uid, loading, dispatch]);
 
   return (
-    <UserContext.Provider value={value}>
+    <UserContext.Provider value={{ uid, defineUid, loading }}>
       <React.Fragment>
         <CssBaseline />
         <NavBar />
