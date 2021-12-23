@@ -51,6 +51,13 @@ const PostForm = () => {
     setVideo("");
   };
 
+  const handleCancel = () => {
+    setPostPicture("");
+    setFile("");
+    setVideo("");
+    setPost("");
+  };
+
   const handlePost = async (e) => {
     if (post || postPicture || video) {
       e.preventDefault();
@@ -136,9 +143,35 @@ const PostForm = () => {
             <button onClick={() => setVideo("")}>Supprimer video</button>
           )}
         </div>
-        <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }}>
-          Publier
-        </Button>
+        {post || postPicture || video.length > 5 ? (
+          <Stack direction={"row"}>
+            <Button
+              type="submit"
+              variant="contained"
+              sx={{
+                width: "20%",
+                minWidth: "40px",
+                position: "relative",
+                left: "20%",
+              }}
+            >
+              Publier
+            </Button>
+            <Button
+              variant="contained"
+              color={"error"}
+              onClick={handleCancel}
+              sx={{
+                width: "20%",
+                minWidth: "40px",
+                position: "relative",
+                left: "40%",
+              }}
+            >
+              Annuler
+            </Button>
+          </Stack>
+        ) : null}
       </Box>
     );
   }
