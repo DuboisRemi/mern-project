@@ -6,6 +6,7 @@ import UserContext from "../../AppContext";
 import PostForm from "../posts/PostForm";
 import FollowSuggestions from "../profile/FollowSuggestions";
 import Grid from "@mui/material/Grid";
+import { Typography } from "@mui/material";
 
 const Home = () => {
   const { uid, loading } = useContext(UserContext);
@@ -18,7 +19,9 @@ const Home = () => {
     return (
       <Grid container direction={"row"}>
         <Grid item xs={4}>
-          {"Hello " + userData.pseudo}
+          <Typography variant={"h3"}>
+            {"Bienvenue " + userData.pseudo}
+          </Typography>
         </Grid>
         <Grid item xs={4}>
           <Grid container direction={"column"} textAlign={"center"}>

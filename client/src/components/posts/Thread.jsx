@@ -48,11 +48,7 @@ const Thread = () => {
       {!isEmpty(posts[0]) &&
         posts.map((post) => {
           return (
-            <ListItem
-              key={post._id}
-              divider={true}
-              sx={{ justifyContent: "center" }}
-            >
+            <ListItem key={post._id} divider={true}>
               <Card post={post} setReload={setReload} />
             </ListItem>
           );

@@ -5,6 +5,8 @@ import {
   Box,
   Button,
   Container,
+  List,
+  ListItem,
   Stack,
   TextField,
   Typography,
@@ -30,37 +32,58 @@ const CardComment = ({ post }) => {
   };
 
   return (
-    <div>
-      {post.comments.map((comment) => {
-        return (
-          <Container>
-            <Stack key={comment._id} direction={"row"}>
-              <Avatar
-                src={usersData
-                  .map((user) => {
-                    if (user._id === comment.commenterId) return user.picture;
-                    else return null;
-                  })
-                  .join("")}
-                alt={usersData
-                  .map((user) => {
-                    if (user._id === comment.commenterId) return user.pseudo;
-                    else return null;
-                  })
-                  .join("")}
-              />
-              <Typography marginLeft={"10%"} variant={"body1"}>
-                {comment.commenterPseudo}
-              </Typography>
-              {comment.commenterId !== userData._id && (
-                <FollowHandler idToFollow={comment.commenterId} />
-              )}
-            </Stack>
-            <Typography variant={"body2"}>{comment.text}</Typography>
-          </Container>
-        );
-      })}
-      <Box component="form" onSubmit={handleComment} noValidate>
+    <Container
+      style={{
+        border: "0.5px solid rgba(0, 0, 0, 0.12)",
+        borderRadius: "20px",
+      }}
+    >
+      <List>
+        {post.comments.map((comment) => {
+          return (
+            <ListItem key={comment._id} divider={true}>
+              <Container
+                sx={{
+                  position: "relative",
+                  textAlign: "center",
+                }}
+              >
+                <Stack key={comment._id} direction={"row"} spacing={2}>
+                  <Avatar
+                    src={usersData
+                      .map((user) => {
+                        if (user._id === comment.commenterId)
+                          return user.picture;
+                        else return null;
+                      })
+                      .join("")}
+                    alt={usersData
+                      .map((user) => {
+                        if (user._id === comment.commenterId)
+                          return user.pseudo;
+                        else return null;
+                      })
+                      .join("")}
+                  />
+                  <Typography variant={"body1"}>
+                    {comment.commenterPseudo}
+                  </Typography>
+                  {comment.commenterId !== userData._id && (
+                    <FollowHandler idToFollow={comment.commenterId} />
+                  )}
+                </Stack>
+                <Typography variant={"body2"}>{comment.text}</Typography>
+              </Container>
+            </ListItem>
+          );
+        })}
+      </List>
+      <Box
+        component="form"
+        onSubmit={handleComment}
+        noValidate
+        textAlign={"center"}
+      >
         <TextField
           margin="normal"
           required
@@ -74,12 +97,12 @@ const CardComment = ({ post }) => {
         <Button
           type="submit"
           variant="contained"
-          sx={{ height: "30px", width: "60px", marginLeft: "60%" }}
+          sx={{ height: "30px", width: "60px" }}
         >
           Publier
         </Button>
       </Box>
-    </div>
+    </Container>
   );
 };
 

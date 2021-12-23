@@ -5,7 +5,6 @@ import UserContext from "../../AppContext";
 import { useDispatch } from "react-redux";
 import { likePost, unlikePost } from "../../actions/post.actions";
 import { Stack, Typography } from "@mui/material";
-import Grid from "@mui/material/Grid";
 
 const LikeButton = ({ post }) => {
   const [liked, setLiked] = useState(false);
@@ -25,19 +24,23 @@ const LikeButton = ({ post }) => {
   }, [uid, post, liked]);
   if (!liked) {
     return (
-      <Stack direction={"row"} spacing={0.5}>
+      <Stack
+        direction={"row"}
+        spacing={0.5}
+        sx={{ marginBottom: "10px", marginLeft: "10px" }}
+      >
         <GradeOutlinedIcon
           color={"primary"}
           onClick={like}
           alt={"like"}
           sx={{ cursor: "pointer" }}
         />
-        <Typography marginBottom={"1%"}>{post.likers.length}</Typography>
+        <Typography>{post.likers.length}</Typography>
       </Stack>
     );
   } else if (liked) {
     return (
-      <Stack direction={"row"} spacing={0.5}>
+      <Stack direction={"row"} spacing={0.5} sx={{ margin: "10px" }}>
         <GradeIcon color={"primary"} onClick={unlike} alt={"unlike"} />
         <Typography marginBottom={"1%"}>{post.likers.length}</Typography>
       </Stack>
