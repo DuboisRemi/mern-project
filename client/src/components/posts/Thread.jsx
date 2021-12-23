@@ -4,7 +4,7 @@ import { getPosts } from "../../actions/post.actions";
 import { isEmpty } from "../../utils";
 import Loading from "../Loading";
 import Card from "./Card";
-import { List, ListItem } from "@mui/material";
+import { Container, List, ListItem, Stack } from "@mui/material";
 
 const Thread = () => {
   const [loadPosts, setLoadPosts] = useState(true);
@@ -44,16 +44,25 @@ const Thread = () => {
   }, [posts, loading]);
   if (loading) return <Loading />;
   return (
-    <List>
+    <Stack>
       {!isEmpty(posts[0]) &&
         posts.map((post) => {
           return (
-            <ListItem key={post._id} divider={true}>
+            <Container
+              key={post._id}
+              divider={true}
+              sx={{
+                width: "100%",
+                textAlign: "center",
+                borderBottom: "0.5px solid rgba(0, 0, 0, 0.12)",
+                marginBottom: "15px",
+              }}
+            >
               <Card post={post} setReload={setReload} />
-            </ListItem>
+            </Container>
           );
         })}
-    </List>
+    </Stack>
   );
 };
 

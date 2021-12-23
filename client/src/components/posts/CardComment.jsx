@@ -36,6 +36,7 @@ const CardComment = ({ post }) => {
       style={{
         border: "0.5px solid rgba(0, 0, 0, 0.12)",
         borderRadius: "20px",
+        position: "relative",
       }}
     >
       <List>
