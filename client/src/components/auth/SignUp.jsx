@@ -6,7 +6,7 @@ import { getUser } from "../../actions/user.actions";
 import UserContext from "../../AppContext";
 
 const SignUp = () => {
-  const { setUId } = useContext(UserContext);
+  const { defineUid } = useContext(UserContext);
   const [email, setEmail] = useState("");
   const [pseudo, setPseudo] = useState("");
   const [password, setPassword] = useState("");
@@ -17,6 +17,9 @@ const SignUp = () => {
     const emailError = document.querySelector(".email.error");
     const pseudoError = document.querySelector(".pseudo.error");
     const passwordError = document.querySelector(".password.error");
+
+    if (password !== confirmedPassword)
+      passwordError.innerHTML = "les mots de passes doivent être identiques";
 
     axios({
       method: "post",
@@ -34,7 +37,7 @@ const SignUp = () => {
           pseudoError.innerHTML = res.data.errors.pseudo;
           passwordError.innerHTML = res.data.errors.password;
         } else {
-          setUId(res.data._id);
+          defineUid(res.data._id);
           dispatch(getUser(res.data._id));
           window.location = "/auth";
         }
