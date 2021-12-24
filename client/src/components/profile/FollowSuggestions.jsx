@@ -26,7 +26,9 @@ const FollowSuggestions = () => {
   else
     return (
       <div>
-        <Typography variant={"h6"}>Suggestions d'abonnement</Typography>
+        <Typography variant={"h6"} textAlign={"center"}>
+          Suggestions d'abonnement
+        </Typography>
         <List>
           {usersData.map((user) => {
             if (
@@ -34,11 +36,7 @@ const FollowSuggestions = () => {
               userData._id !== user._id
             )
               return (
-                <ListItem
-                  key={user._id}
-                  sx={{ width: "100%" }}
-                  alignItems={"center"}
-                >
+                <ListItem key={user._id} sx={{ width: "100%" }}>
                   <ListItemAvatar />
                   <Avatar
                     src={user.picture}

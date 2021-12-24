@@ -58,13 +58,13 @@ const Card = (props) => {
                 .join("")}
             </Typography>
             {props.post.posterId !== userData._id ? (
-              <Container sx={{ position: "relative", left: "45%" }}>
+              <Container sx={{ position: "relative", left: "30%" }}>
                 <FollowHandler idToFollow={props.post.posterId} />
               </Container>
             ) : (
               <DeleteOutlinedIcon
                 onClick={handleDelete}
-                sx={{ cursor: "pointer", position: "relative", left: "80%" }}
+                sx={{ cursor: "pointer", position: "relative", left: "70%" }}
               />
             )}
           </Stack>
@@ -79,15 +79,17 @@ const Card = (props) => {
             </Box>
           )}
           {props.post.video && (
-            <iframe
-              width="500"
-              height="300"
-              src={props.post.video}
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              title={props.post._id}
-            />
+            <Box boxShadow={12} width={500} height={300} margin={"auto"}>
+              <iframe
+                width="500"
+                height="300"
+                src={props.post.video}
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                title={props.post._id}
+              />
+            </Box>
           )}
 
           <Stack

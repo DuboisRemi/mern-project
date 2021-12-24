@@ -1,12 +1,16 @@
 import axios from "axios";
 
 export const GET_POSTS = "GET_POSTS";
+export const GET_ALL_POSTS = "GET_ALL_POSTS";
 export const ADD_POST = "ADD_POST";
 export const LIKE_POST = "LIKE_POST";
 export const UNLIKE_POST = "UNLIKE_POST";
 export const DELETE_POST = "DELETE_POST";
 
 export const ADD_COMMENT = "ADD_COMMENT";
+
+// trends
+export const GET_TRENDS = "GET_TRENDS";
 
 // errors
 export const GET_POST_ERRORS = "GET_POST_ERRORS";
@@ -18,6 +22,7 @@ export const getPosts = (count) => {
       .then((res) => {
         const array = res.data.slice(0, count);
         dispatch({ type: "GET_POSTS", payload: array });
+        dispatch({ type: "GET_ALL_POSTS", payload: res.data });
       })
       .catch((err) => {
         console.log(err);
@@ -96,5 +101,11 @@ export const addComment = (postId, commenterId, text, commenterPseudo) => {
       .catch((err) => {
         console.log(err);
       });
+  };
+};
+
+export const getTrends = (sortedArray) => {
+  return (dispatch) => {
+    dispatch({ type: GET_TRENDS, payload: sortedArray });
   };
 };
