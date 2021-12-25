@@ -16,7 +16,7 @@ export const LOGOUT = "LOGOUT";
 export const getUser = (uid) => {
   return (dispatch) => {
     return axios
-      .get(`${process.env.REACT_APP_API_URL}api/user/${uid}`)
+      .get(`${process.env.REACT_APP_API_URL}api/user/${uid}`, {withCredentials: true})
       .then((res) => {
         dispatch({
           type: GET_USER,
@@ -32,7 +32,7 @@ export const getUser = (uid) => {
 export const uploadPicture = (data, id) => {
   return (dispatch) => {
     return axios
-      .post(`${process.env.REACT_APP_API_URL}api/user/upload`, data)
+      .post(`${process.env.REACT_APP_API_URL}api/user/upload` , data, {withCredentials: true})
       .then((res) => {
         return axios
           .get(`${process.env.REACT_APP_API_URL}api/user/${id}`)
@@ -51,7 +51,7 @@ export const updateBio = (userId, bio) => {
     return axios
       .put(`${process.env.REACT_APP_API_URL}api/user/${userId}`, {
         bio: bio,
-      })
+      }, {withCredentials: true})
       .then((res) => {
         dispatch({ type: UPDATE_BIO, payload: bio });
       })
@@ -64,7 +64,7 @@ export const followUser = (followerId, idToFollow) => {
     return axios
       .patch(`${process.env.REACT_APP_API_URL}api/user/follow/${followerId}`, {
         idToFollow: idToFollow,
-      })
+      }, {withCredentials: true})
       .then((res) => {
         dispatch({ type: FOLLOW_USER, payload: idToFollow });
       })
@@ -81,7 +81,7 @@ export const unfollowUser = (followerId, idToUnfollow) => {
         `${process.env.REACT_APP_API_URL}api/user/unfollow/${followerId}`,
         {
           idToUnfollow: idToUnfollow,
-        }
+        },{withCredentials: true}
       )
       .then((res) => {
         dispatch({ type: UNFOLLOW_USER, payload: idToUnfollow });

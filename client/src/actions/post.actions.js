@@ -18,7 +18,7 @@ export const GET_POST_ERRORS = "GET_POST_ERRORS";
 export const getPosts = (count) => {
   return (dispatch) => {
     return axios
-      .get(`${process.env.REACT_APP_API_URL}api/post/`)
+      .get(`${process.env.REACT_APP_API_URL}api/post/`, {withCredentials:true})
       .then((res) => {
         const array = res.data.slice(0, count);
         dispatch({ type: "GET_POSTS", payload: array });
@@ -33,7 +33,7 @@ export const getPosts = (count) => {
 export const addPost = (data) => {
   return (dispatch) => {
     return axios
-      .post(`${process.env.REACT_APP_API_URL}api/post/`, data)
+      .post(`${process.env.REACT_APP_API_URL}api/post/` , data, {withCrendentials: true})
       .then((res) => {
         if (res.data.errors) {
           dispatch({ type: GET_POST_ERRORS, payload: res.data.errors });
@@ -49,7 +49,7 @@ export const addPost = (data) => {
 export const deletePost = (postId) => {
   return (dispatch) => {
     return axios
-      .delete(`${process.env.REACT_APP_API_URL}api/post/${postId}`)
+      .delete(`${process.env.REACT_APP_API_URL}api/post/${postId}`, {withCredentials: true})
       .then((res) => {
         dispatch({ type: DELETE_POST, payload: postId });
       })
@@ -60,9 +60,9 @@ export const deletePost = (postId) => {
 export const likePost = (postId, userId) => {
   return (dispatch) => {
     return axios
-      .patch(`${process.env.REACT_APP_API_URL}api/post/like/${postId}`, {
+      .patch(`${process.env.REACT_APP_API_URL}api/post/like/${postId}`,{
         id: userId,
-      })
+      }, {withCredentials: true })
       .then((res) => {
         dispatch({ type: LIKE_POST, payload: { postId, userId } });
       })
@@ -75,9 +75,9 @@ export const likePost = (postId, userId) => {
 export const unlikePost = (postId, userId) => {
   return (dispatch) => {
     return axios
-      .patch(`${process.env.REACT_APP_API_URL}api/post/unlike/${postId}`, {
+      .patch(`${process.env.REACT_APP_API_URL}api/post/unlike/${postId}` ,  {
         id: userId,
-      })
+      }, {withCredentials: true})
       .then((res) => {
         dispatch({ type: UNLIKE_POST, payload: { postId, userId } });
       })
@@ -90,11 +90,11 @@ export const unlikePost = (postId, userId) => {
 export const addComment = (postId, commenterId, text, commenterPseudo) => {
   return (dispatch) => {
     return axios
-      .patch(`${process.env.REACT_APP_API_URL}api/post/comment/${postId}`, {
+      .patch(`${process.env.REACT_APP_API_URL}api/post/comment/${postId}`,  {
         commenterId,
         text,
         commenterPseudo,
-      })
+      }, {withCredentials: true})
       .then((res) => {
         dispatch({ type: ADD_COMMENT, payload: { postId } });
       })
