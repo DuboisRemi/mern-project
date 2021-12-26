@@ -2,19 +2,18 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 require("dotenv-flow").config({ path: "./config/" });
-require("./config/db");
+const database = require("./config/db");
 const app = express();
 const passport = require("passport");
 const userRoutes = require("./routes/user.routes");
 const postRoutes = require("./routes/post.routes");
 const { checkUser, requireAuth } = require("./middleware/auth.middleware");
-var https = require('https');
 const fs = require('fs');
-var privateKey  = fs.readFileSync('config/privkey.pem', 'utf8');
-var certificate = fs.readFileSync('config/cert.pem', 'utf8');
-var credentials = {key: privateKey, cert: certificate};
-
 const cors = require("cors");
+const https = require("https");
+const privateKey  = fs.readFileSync('config/privkey.pem', 'utf8');
+const certificate = fs.readFileSync('config/cert.pem', 'utf8');
+const credentials = {key: privateKey, cert: certificate};
 
 const corsOptions = {
   origin: process.env.CLIENT_URL,
@@ -36,16 +35,17 @@ app.use(cookieParser());
 //routes
 app.use("/api/user", userRoutes);
 app.use("/api/post", postRoutes);
+const db = Promise.resolve(database.connect());
 
 let port = process.env.PORT || 5000;
-var httpsServer = https.createServer(credentials, app);
-httpsServer.listen(port);
+const server = https.createServer(credentials, app).listen(port);
 
 //required to run tests
 
 function stop() {
-  httpsServer.close();
+  server.close();
 }
 
-module.exports = httpsServer;
+module.exports = server;
 module.exports.stop = stop;
+

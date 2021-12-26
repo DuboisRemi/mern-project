@@ -30,7 +30,7 @@ module.exports.createPost = async (req, res) => {
       console.log(req.file);
       fileName = Date.now() + ".jpg";
       const buffer = Buffer.from(req.file.buffer);
-      fs.createWriteStream("../client/public/img/posts/" + fileName).write(
+      fs.createWriteStream("../client/build/img/posts/" + fileName).write(
         buffer
       );
     } catch (err) {

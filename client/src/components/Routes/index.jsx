@@ -3,17 +3,16 @@ import React from "react";
 import Home from "../pages/Home.jsx";
 import Profile from "../pages/Profile.jsx";
 import Trending from "../pages/Trending.jsx";
-import Auth from "../pages/Auth";
+import Auth from "../pages/Auth.jsx";
 
 const index = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/trending" element={<Trending />} />
-        <Route path="/auth" element={<Auth signup={false} signin={true} />} />
-        <Route element={<Home />} />
+        <Route  path= {`/`} element={<Home />} />
+        <Route  path={`/profile`} element={<Profile />} />
+        <Route  path={`/trending`} element={<Trending />} />
+        <Route  path={`/auth`} element={<Auth signup={false} signin={true} />} />
       </Routes>
     </Router>
   );

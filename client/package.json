@@ -2,7 +2,7 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://www.remi-dubois.me",
+  "homepage": "/mern-network/",
   "dependencies": {
     "@craco/craco": "^6.4.2",
     "@emotion/react": "^11.7.0",
@@ -33,7 +33,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "set HTTPS=true && react-scripts build",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
