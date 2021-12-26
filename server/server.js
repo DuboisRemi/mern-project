@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 require("dotenv-flow").config({ path: "./config/" });
-const database = require("./config/db");
+require("./config/db");
 const app = express();
 const passport = require("passport");
 const userRoutes = require("./routes/user.routes");
@@ -35,7 +35,6 @@ app.use(cookieParser());
 //routes
 app.use("/api/user", userRoutes);
 app.use("/api/post", postRoutes);
-const db = Promise.resolve(database.connect());
 
 let port = process.env.PORT || 5000;
 const server = https.createServer(credentials, app).listen(port);
