@@ -22,24 +22,11 @@ module.exports.readPost = (req, res) => {
 };
 
 module.exports.createPost = async (req, res) => {
-  let fileName;
-
-  if (req.file !== undefined) {
-    try {
-      if (req.file.size > 500000) throw Error("max size");
-      console.log(req.file);
-      fileName = Date.now() + ".jpg";
-      const buffer = Buffer.from(req.file.buffer);
-      fs.createWriteStream("/public/img/posts/" + fileName).write(
-        buffer
-      );
-    } catch (err) {
-      console.log(err);
-      const errors = uploadErrors(err);
-      return res.status(400).json({ errors });
-    }
-  }
-
+  let filename;
+  if (req.file) {
+	filename = req.file.filename;
+	console.log(filename);
+	}
   const { posterId, message, video } = req.body;
 
   if (!ObjectID.isValid(posterId)) {
@@ -51,7 +38,7 @@ module.exports.createPost = async (req, res) => {
       posterId: posterId,
       message: message,
       video: video,
-      picture: fileName !== undefined ? "/public/img/posts/" + fileName : "",
+      picture: filename !== undefined ? "/img/" + filename : "",
     });
     return res.status(201).json(newPost);
   } catch (err) {
