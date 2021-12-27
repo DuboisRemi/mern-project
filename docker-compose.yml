@@ -2,6 +2,10 @@ version: '3'
 services:
  mongo:
   image: mongo:latest
+  container_name: mongodb
+  restart: always
+  environment:
+   MONGO_INITDB_DATABASE: mernProject
   ports:
    - "27017:27017"
   volumes:
@@ -14,6 +18,9 @@ services:
    - mongo
   depends_on:
    - "mongo"
+  volumes: 
+   - /usr/share/nginx/html/img:/app/routes/public/img/
+   - ./api-logs:/logs
   command: ["./wait-for-it.sh", "mongo:27017", "--","node", "./server.js"]
  client:
   build: client/
@@ -21,4 +28,6 @@ services:
    - "3000:3000"
   links:
    - api
-  command: ["serve", "-s", "./build"] 
+  volumes:
+   - /usr/share/nginx/html/img:/app/build/img/
+  command: ["serve", "-s", "/app/build"]

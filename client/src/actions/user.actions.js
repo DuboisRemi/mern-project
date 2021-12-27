@@ -35,7 +35,7 @@ export const uploadPicture = (data, id) => {
       .post(`${process.env.REACT_APP_API_URL}api/user/upload` , data, {withCredentials: true})
       .then((res) => {
         return axios
-          .get(`${process.env.REACT_APP_API_URL}api/user/${id}`)
+          .get(`${process.env.REACT_APP_API_URL}api/user/${id}`, {withCredentials: true})
           .then((res) => {
             dispatch({ type: UPLOAD_PICTURE, payload: res.data.picture });
           });

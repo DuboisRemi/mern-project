@@ -7,7 +7,7 @@ import Auth from "../pages/Auth.jsx";
 
 const index = () => {
   return (
-    <Router>
+    <Router basename={"/mern-network"}>
       <Routes>
         <Route  path= {`/`} element={<Home />} />
         <Route  path={`/profile`} element={<Profile />} />

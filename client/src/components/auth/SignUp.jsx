@@ -39,7 +39,7 @@ const SignUp = () => {
         } else {
           defineUid(res.data._id);
           dispatch(getUser(res.data._id));
-          window.location = "/auth";
+          window.location = "mern-network/auth";
         }
       })
       .catch((err) => {

@@ -111,8 +111,12 @@ module.exports.currentUser = async (req, res) => {
       if (err) {
         return res.cookie("jwt", "", { maxAge: 1 }).sendStatus(403);
       } else {
-        const user = await UserModel.findById(decodedToken.id);
-        return res.status(200).json(user._id);
+	try {
+        	const user = await UserModel.findById(decodedToken.id);
+        	return res.status(200).json(user._id);
+	} catch(err) {
+		return res.status(404).send("user not found");
+	}
       }
     });
   } else return res.sendStatus(403);

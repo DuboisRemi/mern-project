@@ -18,11 +18,11 @@ const Profile = () => {
   const handleLogout = () => {
     defineUid("default");
     dispatch(logout());
-    window.location = "/auth";
+    window.location = "/mern-network/auth";
   };
   if (loading) return <Loading />;
   if (!loading && uid === "default") {
-    //window.location = "/auth";
+    window.location = "/mern-network/auth";
     return <Loading />;
   }
   return (

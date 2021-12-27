@@ -5,7 +5,7 @@ import { Button, Input } from "@mui/material";
 import Grid from "@mui/material/Grid";
 
 const UploadImg = () => {
-  const [file, setFile] = useState();
+  const [file, setFile] = useState({});
   const [updatePicture, setUpdatePicture] = useState(false);
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.userReducer);
@@ -15,11 +15,13 @@ const UploadImg = () => {
   };
   const handlePicture = (e) => {
     e.preventDefault();
-    const data = new FormData();
+    let data = new FormData();
     data.append("name", userData.pseudo);
     data.append("userId", userData._id);
     data.append("file", file);
-
+    for (var p of data) {
+	console.log(p);
+	}
     dispatch(uploadPicture(data, userData._id));
   };
   return (

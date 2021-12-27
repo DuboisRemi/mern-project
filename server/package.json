@@ -25,6 +25,7 @@
     "express": "^4.17.1",
     "express-jwt": "^6.1.0",
     "express-session": "^1.17.2",
+    "express-winston": "^4.2.0",
     "fs": "^0.0.1-security",
     "https": "^1.0.0",
     "jsonwebtoken": "^8.5.1",
@@ -38,7 +39,8 @@
     "streamifier": "^0.1.1",
     "supertest": "^6.1.6",
     "util": "^0.12.4",
-    "validator": "^13.7.0"
+    "validator": "^13.7.0",
+    "winston": "^3.3.3"
   },
   "devDependencies": {
     "portfinder": "^1.0.28",

@@ -2,7 +2,7 @@ const multer = require("multer");
 
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
-    callback(null, `${__dirname}/../../client/build/img`);
+    callback(null, `/public/usr/`);
   },
   filename: (req, file, callback) => {
     const name = req.body.userId;

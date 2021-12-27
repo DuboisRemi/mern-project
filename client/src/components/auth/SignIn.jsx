@@ -44,7 +44,7 @@ const SignIn = () => {
       });
   };
   if (!loading && uid !== "default") {
-    window.location = "/profile";
+    window.location = "profile";
     return <Loading />;
   }
 

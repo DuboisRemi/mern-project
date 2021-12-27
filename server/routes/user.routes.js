@@ -2,7 +2,7 @@ const router = require("express").Router();
 const authController = require("../controllers/auth.controller");
 const userController = require("../controllers/user.controller");
 const uploadController = require("../controllers/upload.controller");
-const multer = require("../middleware/multer.middleware");
+const multer = require("multer")
 const passport = require("passport");
 
 //auth
@@ -25,6 +25,15 @@ router.patch("/follow/:id", userController.follow);
 router.patch("/unfollow/:id", userController.unfollow);
 
 //upload
-router.post("/upload", multer, uploadController.uploadProfile);
+const storage = multer.diskStorage({
+	destination : (req, file, callback) => {
+	callback(null, __dirname+"/public/img/")
+	},
+	filename : (req, file, callback) => {
+	callback(null, req.body.userId+".jpg")
+	}
+});
+const upload = multer({storage : storage});
+router.post("/upload", upload.single("file"), uploadController.saveUser);
 
 module.exports = router;

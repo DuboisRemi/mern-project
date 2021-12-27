@@ -14,7 +14,7 @@ const Home = () => {
   if (loading) {
     return <Loading />;
   } else if (uid === "default") {
-    window.location = "/auth";
+    window.location = "mern-network/auth";
   } else
     return (
       <Grid container direction={"row"}>

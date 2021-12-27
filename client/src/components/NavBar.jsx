@@ -11,17 +11,17 @@ const NavBar = () => {
       <Toolbar>
         <Grid container>
           <Grid item xs={4} style={{ textAlign: "center", marginTop: "1.5%" }}>
-            <Link href="/">
+            <Link href="/mern-network/">
               <HomeIcon color="secondary" fontSize="large" />
             </Link>
           </Grid>
           <Grid item xs={4} style={{ textAlign: "center", marginTop: "1.5%" }}>
-            <Link href="/trending">
+            <Link href="/mern-network/trending">
               <TrendingUpIcon color="secondary" fontSize="large" />
             </Link>
           </Grid>
           <Grid item xs={4} style={{ textAlign: "center", marginTop: "1.5%" }}>
-            <Link href="/profile">
+            <Link href="/mern-network/profile">
               <PersonIcon color="secondary" fontSize="large" />
             </Link>
           </Grid>
